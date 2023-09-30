@@ -1,24 +1,5 @@
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    hostname: localhost
-server:
-  port: 8989
 spring:
   application:
     name: GATEWAY-SERVICE
-  cloud:
-    gateway:
-      routes:
-        - id: order-service
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/orders/**
-        - id: payment-service
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Path=/payment/**
+  config:
+    import: optional:configserver:http://localhost:8888
