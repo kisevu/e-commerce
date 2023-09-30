@@ -16,6 +16,7 @@
     <module>order-service</module>
     <module>payment-service</module>
     <module>service-registry</module>
+    <module>gateway</module>
   </modules>
 
   <properties>
