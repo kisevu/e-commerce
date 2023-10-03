@@ -7,7 +7,10 @@ server:
       register-with-eureka: false
       fetch-registry: false
       service-url:
-        defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+        defaultZone: http://localhost:8761/eureka/
 spring:
   application:
     name: SERVICE-REGISTRY
+
+
+#http://${eureka.instance.hostname}:${server.port}/eureka/

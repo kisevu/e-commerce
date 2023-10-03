@@ -9,8 +9,6 @@ import com.amedakevinkisevu.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import javax.persistence.OrderBy;
 import java.util.UUID;
 
 @Service
