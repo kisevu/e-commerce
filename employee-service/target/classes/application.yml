@@ -1,0 +1,19 @@
+server:
+  port: 9096
+spring:
+  application:
+    name: EMPLOYEE-SERVICE
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: ameda
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+      format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
