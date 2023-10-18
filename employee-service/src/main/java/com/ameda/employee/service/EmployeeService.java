@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.UUID;
 
@@ -19,8 +20,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
-    private final RestTemplate restTemplate;
+//    private final RestTemplate restTemplate;
     private final ModelMapper modelMapper;
+    private final WebClient webClient;
 
     @Value("${address-service.base_url}")
     private String baseURL;
@@ -49,8 +51,16 @@ public class EmployeeService {
         EmployeeResponse employeeResponse = modelMapper.map(employee,EmployeeResponse.class);
         //if you update the application to have a context-path
         //then be rest assured that the mapped id works dynamically for the address...
-        AddressResponse addressResponse =restTemplate.getForObject(baseURL+"0abfe242097d", AddressResponse.class,employeeId);
+        AddressResponse addressResponse =webClient
+                .get()
+                .uri("0abfe242097d")
+                .retrieve()
+                .bodyToMono(AddressResponse.class)
+                .block();
         employeeResponse.setAddressResponse(addressResponse);
         return employeeResponse;
     }
+//    private AddressResponse callingAddressServiceUsingRestTemplate(String employeeId){
+//        return restTemplate.getForObject(baseURL+"0abfe242097d", AddressResponse.class,employeeId);
+//    }
 }
