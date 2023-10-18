@@ -8,6 +8,7 @@ import com.ameda.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +21,9 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final RestTemplate restTemplate;
     private final ModelMapper modelMapper;
+
+    @Value("${address-service.base_url}")
+    private String baseURL;
 
     public String setId(){
         return UUID.randomUUID().toString()
@@ -45,7 +49,7 @@ public class EmployeeService {
         EmployeeResponse employeeResponse = modelMapper.map(employee,EmployeeResponse.class);
         //if you update the application to have a context-path
         //then be rest assured that the mapped id works dynamically for the address...
-        AddressResponse addressResponse =restTemplate.getForObject("http://localhost:9095/api/address/0abfe242097d", AddressResponse.class,employeeId);
+        AddressResponse addressResponse =restTemplate.getForObject(baseURL+"0abfe242097d", AddressResponse.class,employeeId);
         employeeResponse.setAddressResponse(addressResponse);
         return employeeResponse;
     }

@@ -17,3 +17,5 @@ spring:
       format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+address-service:
+  base_url: http://localhost:9095/api/address/
