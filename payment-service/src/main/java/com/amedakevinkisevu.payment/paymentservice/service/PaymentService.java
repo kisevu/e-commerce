@@ -30,4 +30,7 @@ public class PaymentService {
         //this api should be 3rd party payment gateway such as paypal or wise or payoneer.
         return new Random().nextBoolean()?"success":"false";
     }
+    public Payment paymentByOrderId(String orderId) {
+        return paymentRepository.findPaymentByOrderId(orderId).orElseThrow();
+    }
 }

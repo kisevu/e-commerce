@@ -1,21 +1,27 @@
 package com.amedakevinkisevu.orderservice.service;
 
-import com.amedakevinkisevu.orderservice.common.Payment;
-import com.amedakevinkisevu.orderservice.common.TransactionRequest;
-import com.amedakevinkisevu.orderservice.common.TransactionResponse;
+import com.amedakevinkisevu.orderservice.common.*;
 import com.amedakevinkisevu.orderservice.dto.OrderDTO;
 import com.amedakevinkisevu.orderservice.entity.Order;
+import com.amedakevinkisevu.orderservice.feign.PaymentClient;
 import com.amedakevinkisevu.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final RestTemplate restTemplate;
+    private final ModelMapper modelMapper;
+    @Autowired
+    private  PaymentClient paymentClient;
 
     public TransactionResponse bookOrder(TransactionRequest request) {
         String message = "";
@@ -46,5 +52,18 @@ public class OrderService {
         return UUID.randomUUID().toString()
                 .replace("-", "")
                 .substring(0, 12);
+    }
+    public OrderPaymentResponse getOrder(String orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        OrderResponse orderResponse = modelMapper.map(order,OrderResponse.class);
+        Payment payment = paymentClient.paymentByOrderId(orderId).getBody();
+        assert payment != null;
+        log.info(payment.getPaymentId(),payment.getPaymentStatus(),
+                payment.getTransactionId(),payment.getOrderId(),
+                payment.getAmount());
+        return OrderPaymentResponse.builder()
+                .order(order)
+                .payment(payment)
+                .build();
     }
 }

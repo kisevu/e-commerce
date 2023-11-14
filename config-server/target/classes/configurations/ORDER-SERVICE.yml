@@ -1,5 +1,7 @@
 server:
   port: 8005
+#  servlet:
+#    context-path: /employee-app
 spring:
   application:
     name: ORDER-SERVICE

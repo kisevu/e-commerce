@@ -1,5 +1,6 @@
 package com.amedakevinkisevu.orderservice.controller;
 
+import com.amedakevinkisevu.orderservice.common.OrderPaymentResponse;
 import com.amedakevinkisevu.orderservice.common.TransactionRequest;
 import com.amedakevinkisevu.orderservice.common.TransactionResponse;
 import com.amedakevinkisevu.orderservice.service.OrderService;
@@ -8,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -33,5 +31,14 @@ public class OrderController {
     public ResponseEntity<TransactionResponse> bookOrderFallbackMethod(Exception e){
        log.info("Payment service is down, wait for few seconds to get it back up...");
        return new ResponseEntity<>(null,HttpStatus.EXPECTATION_FAILED);
+    }
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<?> getOrderPaymentData(@PathVariable("orderId") String orderId){
+        OrderPaymentResponse response = orderService.getOrder(orderId);
+        if(response!=null){
+            return new ResponseEntity<>(response,HttpStatus.FOUND);
+        }else{
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
     }
 }
